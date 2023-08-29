@@ -50,6 +50,15 @@
     </form>
     <hr/>
     <pre id="result"></pre>
+    <hr/>
+    <p>
+        Send a POST request to the /parse_sms endpoint to parse the SMS. Send a JSON body in this format -
+        <pre>
+{
+    sms_text: "You've spent INR 1234.12 at 17:44 on June 20, 2023. If it wasn't done by you, ping us on the Fi app. -Federal Bank"
+}
+        </pre>
+    </p>
 
     <script>
         $(document).ready(function() {
