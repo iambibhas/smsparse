@@ -9,3 +9,9 @@ Send a POST request to the `/parse_sms` endpoint to parse the SMS. Send a JSON b
 
 If you have an SMS that couldn't be parsed, please send me a sample at
 my email: [mail@bibhasdn.com](mailto:mail@bibhasdn.com), or send a pull request.
+
+# Development/Hosting
+
+If you want to run it yourself, just `docker-compose up --build` and it should run on port 5000.
+
+If you want to deploy it on fly.io, `fly deploy` will deploy it for you.
