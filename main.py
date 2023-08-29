@@ -71,13 +71,13 @@ def parse_sms():
     elif any(word in sms_text.lower() for word in ["credited"]):
         credit_patterns = {
             "ICICI": [
-                r'(?P<bank>ICICI Bank) Account (?P<card>[A-Z0-9]+) credited\:Rs\. (?P<amount>\d+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info (?P<merchant>[^\.]+)\. Available Balance is Rs\. (?P<limit>\d+\.\d{2})\.',
+                r'(?P<bank>ICICI Bank) Account (?P<account_num>[A-Z0-9]+) credited\:Rs\. (?P<amount>\d+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info (?P<recipient>[^\.]+)\. Available Balance is Rs\. (?P<balance>\d+\.\d{2})\.',
             ],
             "We": [
-                r'We have credited your (?P<bank>ICICI Bank) Account (?P<card>[A-Z0-9]+) with INR (?P<amount>\d+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info\:(?P<merchant>[^\.]+)\. The Available Balance is INR (?P<limit>\d+\.\d{2})\.'
+                r'We have credited your (?P<bank>ICICI Bank) Account (?P<account_num>[A-Z0-9]+) with INR (?P<amount>\d+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info\:(?P<recipient>[^\.]+)\. The Available Balance is INR (?P<balance>\d+\.\d{2})\.'
             ],
             "Your": [
-                r'Your (?P<bank>Kotak Bank) a/c (?P<card>x\d{4}) credited with Rs (?P<amount>\d+\.\d{2}) from (?P<merchant>Kotak Bank A/c x\d{4}) on (?P<date>\d{2}-\d{2}-\d{4})\.Ref No\.123456789012\.Bal:(?P<limit>\d+\.\d{2})'
+                r'Your (?P<bank>Kotak Bank) a/c (?P<account_num>x\d{4}) credited with Rs (?P<amount>\d+\.\d{2}) from (?P<recipient>Kotak Bank A/c x\d{4}) on (?P<date>\d{2}-\d{2}-\d{4})\.Ref No\.123456789012\.Bal:(?P<balance>\d+\.\d{2})'
             ]
         }
 
@@ -89,10 +89,10 @@ def parse_sms():
                     entities['type'] = 'credit'
                     entities['amount'] = groups.get("amount", None)
                     entities['bank'] = groups.get("bank", None)
-                    entities['card'] = groups.get("card", None)
+                    entities['account_num'] = groups.get("account_num", None)
                     entities['date'] = groups.get("date", None)
-                    entities['merchant'] = groups.get("merchant", None)
-                    entities['limit'] = groups.get("limit", None)
+                    entities['recipient'] = groups.get("recipient", None)
+                    entities['balance'] = groups.get("balance", None)
                 else:
                     print("No match found for pattern: ", pattern, flush=True)
 
