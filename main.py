@@ -15,7 +15,7 @@ def parse_sms():
     sms_text = request.json.get('sms_text')
     entities = {}
 
-    if set(sms_text.lower().split(" ")).intersection(set("spent", "debited", "withdrawn")):
+    if set(sms_text.lower().split(" ")).intersection(set(["spent", "debited", "withdrawn"])):
         debit_patterns = {
             "INR": [
                 r'INR\s(?P<amount>[\d,]+\.\d{2})\sspent\son\s(?P<bank>[A-Za-z]+\sBank)\sCard\s(?P<card>[A-Z]{2}\d{4})\son\s(?P<date>\d{1,2}-[A-Za-z]{3}-\d{2})\sat\s(?P<merchant>[^\.]+)\.\sAvl\sLmt:\sINR\s(?P<limit>[\d,]+\.\d{2})\.\sTo\sdispute,call\s(?P<phone1>\d+)/SMS\sBLOCK\s(?P<code>\d+)\sto\s(?P<phone2>\d+)',
