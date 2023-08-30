@@ -67,6 +67,7 @@ def parse_sms():
                     entities['merchant'] = groups.get("merchant", None)
                     entities['limit'] = groups.get("limit", None)
                 else:
+                    entities['error'] = 'no match found'
                     print("No match found for pattern: ", pattern, flush=True)
     elif any(word in sms_text.lower() for word in ["credited"]):
         credit_patterns = {
@@ -94,7 +95,10 @@ def parse_sms():
                     entities['recipient'] = groups.get("recipient", None)
                     entities['balance'] = groups.get("balance", None)
                 else:
+                    entities['error'] = 'no match found'
                     print("No match found for pattern: ", pattern, flush=True)
+    else:
+        entities['error'] = 'no match found'
 
     return entities
 
