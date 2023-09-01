@@ -55,17 +55,17 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index2.html')
 
 @app.route('/parse_sms', methods=['POST'])
 def parse_sms():
     # Get the SMS text from the request body
     sms_text = request.json.get('sms_text')
     first_word = re.split('[^a-zA-Z]', sms_text)[0]
-    entities = {}
 
     if any(word in sms_text.lower() for word in ["spent", "debited", "withdrawn", "tranx", "sent"]):
         if first_word in PATTERNS['debit']:
+            entities = {}
             for pattern in PATTERNS['debit'][first_word]:
                 match = re.search(pattern, sms_text)
                 if match:
@@ -77,11 +77,10 @@ def parse_sms():
                     entities['date'] = groups.get("date", None)
                     entities['merchant'] = groups.get("merchant", None)
                     entities['limit'] = groups.get("limit", None)
-                else:
-                    entities['error'] = 'no match found'
-                    print("No match found for pattern: ", pattern, flush=True)
+                    return entities
     elif any(word in sms_text.lower() for word in ["credited"]):
         if first_word in PATTERNS['credit']:
+            entities = {}
             for pattern in PATTERNS['credit'][first_word]:
                 match = re.search(pattern, sms_text)
                 if match:
@@ -93,9 +92,7 @@ def parse_sms():
                     entities['date'] = groups.get("date", None)
                     entities['sender'] = groups.get("sender", None)
                     entities['balance'] = groups.get("balance", None)
-                else:
-                    entities['error'] = 'no match found'
-                    print("No match found for pattern: ", pattern, flush=True)
+                    return entities
     else:
         entities['error'] = 'no match found'
 
