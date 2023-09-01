@@ -3,6 +3,9 @@ from flask import Flask, render_template, request
 
 PATTERNS = {
     'debit': {
+        "Alert": [
+            r'Alert: You\'ve spent INR (?P<amount>[\d,]+\.\d{2}) on your (?P<bank>AMEX) card (?P<card>\*\*\s?\d+) at (?P<merchant>.+) on (?P<date>\d{1,2} [a-zA-Z]+, \d{4}) at (?P<time>\d{2}\:\d{2} (A|P)M IST).*'
+        ],
         "INR": [
             r'INR\s(?P<amount>[\d,]+\.\d{2})\sspent\son\s(?P<bank>[A-Za-z]+\sBank)\sCard\s(?P<card>[A-Z]{2}\d{4})\son\s(?P<date>\d{1,2}-[A-Za-z]{3}-\d{2})\sat\s(?P<merchant>[^\.]+)\.\sAvl\sLmt:\sINR\s(?P<limit>[\d,]+\.\d{2})\.\sTo\sdispute,call\s(?P<phone1>\d+)/SMS\sBLOCK\s(?P<code>\d+)\sto\s(?P<phone2>\d+)',
         ],
@@ -47,6 +50,9 @@ PATTERNS = {
         ],
         "Your": [
             r'Your (?P<bank>Kotak Bank) a/c (?P<account_num>x\d{4}) credited with Rs (?P<amount>[\d,]+\.\d{2}) from (?P<recipient>Kotak Bank A/c x\d{4}) on (?P<date>\d{2}-\d{2}-\d{4})\.Ref No\.123456789012\.Bal:(?P<balance>[\d,]+\.\d{2}).*'
+        ],
+        "Dear": [
+            r'Dear Customer, a payment of INR (?P<amount>[\d,]+\.\d{2}) was received on your (?P<bank>Amex) Card (?P<account_num>\*\*\*\d+) (?P<date>\d{2}/\d{2}/\d{4}).*'
         ]
     }
 }
@@ -60,13 +66,14 @@ def index():
 @app.route('/parse_sms', methods=['POST'])
 def parse_sms():
     # Get the SMS text from the request body
+    entities = {}
     sms_text = request.json.get('sms_text')
     first_word = re.split('[^a-zA-Z]', sms_text)[0]
 
     if any(word in sms_text.lower() for word in ["spent", "debited", "withdrawn", "tranx", "sent"]):
         if first_word in PATTERNS['debit']:
-            entities = {}
             for pattern in PATTERNS['debit'][first_word]:
+                print(pattern, sms_text)
                 match = re.search(pattern, sms_text)
                 if match:
                     groups = match.groupdict()
@@ -78,9 +85,8 @@ def parse_sms():
                     entities['merchant'] = groups.get("merchant", None)
                     entities['limit'] = groups.get("limit", None)
                     return entities
-    elif any(word in sms_text.lower() for word in ["credited"]):
+    elif any(word in sms_text.lower() for word in ["credited", "received"]):
         if first_word in PATTERNS['credit']:
-            entities = {}
             for pattern in PATTERNS['credit'][first_word]:
                 match = re.search(pattern, sms_text)
                 if match:
