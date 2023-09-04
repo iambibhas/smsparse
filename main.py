@@ -67,7 +67,12 @@ def index():
 def parse_sms():
     # Get the SMS text from the request body
     entities = {}
-    sms_text = request.json.get('sms_text')
+    sms_text = request.json.get('sms_text').strip()
+
+    if not sms_text:
+        entities['error'] = 'No SMS text provided'
+        return entities
+
     first_word = re.split('[^a-zA-Z]', sms_text)[0]
 
     if any(word in sms_text.lower() for word in ["spent", "debited", "withdrawn", "tranx", "sent"]):
