@@ -1,5 +1,21 @@
 import re
 from flask import Flask, render_template, request
+from dateutil import parser
+
+
+def parse_date(date_text):
+    try:
+        return parser.parse(date_text).strftime('%Y-%m-%d') if date_text.strip() else None
+    except:
+        return None
+
+
+def parse_amount(amount_text):
+    try:
+        return float(re.sub(r'[^\d.]', '', amount_text)) if amount_text.strip() else None
+    except:
+        return None
+
 
 PATTERNS = {
     'debit': {
@@ -83,12 +99,12 @@ def parse_sms():
                 if match:
                     groups = match.groupdict()
                     entities['type'] = 'debit'
-                    entities['amount'] = groups.get("amount", None)
+                    entities['amount'] = parse_amount(groups.get("amount", None))
                     entities['bank'] = groups.get("bank", None)
                     entities['card'] = groups.get("card", None)
-                    entities['date'] = groups.get("date", None)
+                    entities['date'] = parse_date(groups.get("date", None))
                     entities['merchant'] = groups.get("merchant", None)
-                    entities['limit'] = groups.get("limit", None)
+                    entities['limit'] = parse_amount(groups.get("limit", None))
                     return entities
     elif any(word in sms_text.lower() for word in ["credited", "received"]):
         if first_word in PATTERNS['credit']:
@@ -97,12 +113,12 @@ def parse_sms():
                 if match:
                     groups = match.groupdict()
                     entities['type'] = 'credit'
-                    entities['amount'] = groups.get("amount", None)
+                    entities['amount'] = parse_amount(groups.get("amount", None))
                     entities['bank'] = groups.get("bank", None)
                     entities['account_num'] = groups.get("account_num", None)
-                    entities['date'] = groups.get("date", None)
+                    entities['date'] = parse_date(groups.get("date", None))
                     entities['sender'] = groups.get("sender", None)
-                    entities['balance'] = groups.get("balance", None)
+                    entities['balance'] = parse_amount(groups.get("balance", None))
                     return entities
     else:
         entities['error'] = 'no match found'
