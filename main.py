@@ -55,6 +55,9 @@ PATTERNS = {
         ],
         "Sent": [
             r'Sent Rs\.(?P<amount>[\d,]+\.\d{2}) from (?P<bank>Kotak Bank) AC (?P<card>XXXX\d{4}) to (?P<merchant>.+) on (?P<date>\d{2}-\d{2}-\d{2})\.UPI Ref 123456789012\.Bal:(?P<limit>[\d,]+\.\d{2})\.Click kotak\.com/fraud for dispute'
+        ],
+        "Money": [
+            r'Money Transfer:Rs (?P<amount>[\d,]+\.\d{2}) from (?P<bank>HDFC Bank) A/c (?P<card>\*\*\d{4}) on (?P<date>\d{2}-\d{2}-\d{2}).*'
         ]
     },
     'credit': {
@@ -91,7 +94,7 @@ def parse_sms():
 
     first_word = re.split('[^a-zA-Z]', sms_text)[0]
 
-    if any(word in sms_text.lower() for word in ["spent", "debited", "withdrawn", "tranx", "sent"]):
+    if any(word in sms_text.lower() for word in ["spent", "debited", "withdrawn", "tranx", "sent", "transfer"]):
         if first_word in PATTERNS['debit']:
             for pattern in PATTERNS['debit'][first_word]:
                 print(pattern, sms_text)
