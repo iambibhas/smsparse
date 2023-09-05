@@ -43,13 +43,13 @@ PATTERNS = {
     },
     'credit': {
         "ICICI": [
-            r'(?P<bank>ICICI Bank) Account (?P<account_num>[A-Z0-9]+) credited\:Rs\. (?P<amount>[\d,]+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info (?P<recipient>[^\.]+)\. Available Balance is Rs\. (?P<balance>[\d,]+\.\d{2}).*',
+            r'(?P<bank>ICICI Bank) Account (?P<account_num>[A-Z0-9]+) credited\:Rs\. (?P<amount>[\d,]+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info (?P<sender>[^\.]+)\. Available Balance is Rs\. (?P<balance>[\d,]+\.\d{2}).*',
         ],
         "We": [
-            r'We have credited your (?P<bank>ICICI Bank) Account (?P<account_num>[A-Z0-9]+) with INR (?P<amount>[\d,]+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info\:(?P<recipient>[^\.]+)\. The Available Balance is INR (?P<balance>[\d,]+\.\d{2}).*'
+            r'We have credited your (?P<bank>ICICI Bank) Account (?P<account_num>[A-Z0-9]+) with INR (?P<amount>[\d,]+\.\d{2}) on (?P<date>\d{2}-[A-Za-z]{3}-\d{2})\. Info\:(?P<sender>[^\.]+)\. The Available Balance is INR (?P<balance>[\d,]+\.\d{2}).*'
         ],
         "Your": [
-            r'Your (?P<bank>Kotak Bank) a/c (?P<account_num>x\d{4}) credited with Rs (?P<amount>[\d,]+\.\d{2}) from (?P<recipient>Kotak Bank A/c x\d{4}) on (?P<date>\d{2}-\d{2}-\d{4})\.Ref No\.123456789012\.Bal:(?P<balance>[\d,]+\.\d{2}).*'
+            r'Your (?P<bank>Kotak Bank) a/c (?P<account_num>x\d{4}) credited with Rs (?P<amount>[\d,]+\.\d{2}) from (?P<sender>Kotak Bank A/c x\d{4}) on (?P<date>\d{2}-\d{2}-\d{4})\.Ref No\.123456789012\.Bal:(?P<balance>[\d,]+\.\d{2}).*'
         ],
         "Dear": [
             r'Dear Customer, a payment of INR (?P<amount>[\d,]+\.\d{2}) was received on your (?P<bank>Amex) Card (?P<account_num>\*\*\*\d+) (?P<date>\d{2}/\d{2}/\d{4}).*'
