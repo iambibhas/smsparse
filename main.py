@@ -7,14 +7,14 @@ def parse_date(date_text):
     try:
         return parser.parse(date_text).strftime('%Y-%m-%d') if date_text.strip() else None
     except:
-        return None
+        return date_text
 
 
 def parse_amount(amount_text):
     try:
         return float(re.sub(r'[^\d.]', '', amount_text)) if amount_text.strip() else None
     except:
-        return None
+        return amount_text
 
 
 PATTERNS = {
